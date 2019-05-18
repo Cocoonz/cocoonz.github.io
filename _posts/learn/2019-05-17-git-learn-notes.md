@@ -10,8 +10,6 @@ description: 初学git的笔记
 
 ![](https://www.git-tower.com/blog/content/posts/54-git-cheat-sheet/git-cheat-sheet-large01.png)
 
-![0001](C:\Users\aqyjz\Desktop\0001.jpg)
-
 ### 一些基础指令
 
 - $ mkdir xixixi  
