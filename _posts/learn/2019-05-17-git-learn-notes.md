@@ -8,6 +8,8 @@ description: 初学git的笔记
 
 ### Git-Cheat-Sheet
 
+![](https://www.git-tower.com/blog/content/posts/54-git-cheat-sheet/git-cheat-sheet-large01.png)
+
 ![0001](C:\Users\aqyjz\Desktop\0001.jpg)
 
 ### 一些基础指令
@@ -59,34 +61,30 @@ description: 初学git的笔记
 
 - 无法push
 
-  错误信息如下：![微信图片_20190517232946](C:\Users\aqyjz\Desktop\微信图片_20190517232946.png)
+  错误信息如下：![](C:\Users\aqyjz\Desktop\微信图片_20190517232946.png)
 
   解决方法1：强制push
 
-  ```git
-  git push -u origin master -f 
-  ```
+  ` git push -u origin master -f `
 
   这样会使远程修改丢失，一般是不可取的
 
   解决方法2：push前先将远程repository修改pull下来
 
-  ```git
-  git pull origin master
-  git push -u origin master
-  ```
+  ` gitgit pull origin master` 
+
+  `git push -u origin master`
 
   （尝试过此方法但没有解决问题）
   解决方法3：若不想merge远程和本地修改，可以先创建新的分支：
 
-  ```git
-   git branch [name]  
-   git push -u origin [name]
-  ```
+  ` git branch [name]` 
+
+  `git push -u origin [name]`
 
   多人协作的开发过程，一般推荐熟练使用分支功能来进行代码的托管，这样就会避免冲突的发生。
 
-  [原文链接]: https://blog.csdn.net/Rebel_Yangke/article/details/52611128	"Git报错：Updates were rejected because the tip of your current branch is behind"
+  [原文链接](https://blog.csdn.net/Rebel_Yangke/article/details/52611128)
 
   ​
 
