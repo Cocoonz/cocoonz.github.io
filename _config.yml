@@ -1,15 +1,8 @@
 # Site settings
-<<<<<<< HEAD
 title: 杨静甄的博客
 email: 373034372@qq.com
 description: > # this means to ignore newlines until "baseurl:"
   杨静甄的博客
-=======
-title: 我的博客
-email: 10164800323@stu.ecnu.edu.cn
-description: > # this means to ignore newlines until "baseurl:"
-  我的博客
->>>>>>> c5c07f2031fe55609010c746305a062454d4d2fa
 baseurl: "" # the subpath of your site, e.g. /blog/
 url:  # the base hostname & protocol for your site
 author: Jingzhen Yang
