@@ -8,8 +8,6 @@ description:
 
 
 
-# 计算机网络：自顶向下方法 Computer Network: A Top Down Approach
-
 ## Chapter 2 Application Layer
 
 ### 网络应用架构（Network application architectures）
@@ -460,19 +458,64 @@ description:
 
 6. 管道（Pipelining）：
 
+   ![image-20191111214926283](https://s2.ax1x.com/2019/11/11/MlJW3F.png)
+
+   ![](https://s2.ax1x.com/2019/11/11/MlU8xS.md.png)
+
    - 基于问题：传统的 idt 方式使用 stop-and-wait 方式，导致 sender 的带宽利用率非常低（大部分时间都用于 propagate 了）
 
    - 改进方法：sender 允许一次发送多个包，不用等待回执
-
+   
    - 带来的改变：
-
+   
      - 序列号范围增加
+  
      - 协议双方都需要增加缓冲区，sender 需要缓存已经送出但没收到回执的数据包
-     - 需要新的错误检测和恢复方法
-       - **Go-Back-N**
-       - **selective repeat（SR）**
-
-     ![image-20191111214926283](https://s2.ax1x.com/2019/11/11/MlJW3F.png)
+     
+     - 新的错误检测和恢复（error detect and restore）方法
+     - **Go-Back-N**（GBN）	——	“fill the pipeline
+       
+         - 允许 sender 一次发送多个数据包，但是管道中最多同时存在 N 个未收到回执的数据包（包括已发出的和未发出的）
+       
+         - N 指窗口大小（window size），GBN 协议也叫滑动窗口协议（sliding window protocol）
+       
+         - 收到的数据包顺序错误也会被拒绝，返回的 ACK 包含最后收到的顺序正确的序列号
+       
+         - 使用 累积确认（cumulative acknowledgement），即确认了第 $n$ 个，表明已经确认了 $n$ 以下的所有数据包
+       
+         - 对于丢包问题，使用超时事件（timeout event）
+       
+         - sender 需要缓存：window 的上下界、<font style="font-family:courier;font-weight:bold">nextseqnum</font> 在窗口中的位置
+       
+         - receiver 需要缓存：下一个顺序数据包的队列号
+       
+         - 为什么施加窗口大小 N 的限制？流量控制和拥塞控制
+       
+             ![page0](https://s2.ax1x.com/2019/11/11/MlUcqJ.png) 
+       
+         - FSM 表示：
+       
+            ![page0](https://s2.ax1x.com/2019/11/11/MlrEFJ.png)
+       
+            ![page0](https://s2.ax1x.com/2019/11/11/Mlr8FH.png)  
+       
+       - **selective repeat**（SR） 
+       
+         - 针对问题：GBN 的性能问题，当单个数据包出现错误时，可能导致重传多次
+         - 对传输正确的数据包**分别**进行确认
+         - 不在乎数据包是否按顺序到达，只要正确都给予确认回执（ACK），乱序的数据包将先被缓存
+       
+         - receiver 将数据发给上层协议时按批（batch）进行
+       
+         - sender 和 receiver 的窗口状态未必一致
+       
+         - 窗口大小必须 $\leq$ 序列号范围长度的一半
+       
+            ![page0](https://s2.ax1x.com/2019/11/11/MlcIDx.png) 
+       
+     - 总结
+     
+     <img src="C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191112000035950.png" alt="image-20191112000035950" style="zoom:120%;" />
 
 
 
