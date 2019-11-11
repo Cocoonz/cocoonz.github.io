@@ -1,19 +1,14 @@
 ---
 layout: post
-title: 机器学习 笔记
+title: 赵志勇《Python机器学习算法》笔记（更新中）
 category: 学习
-tags: machine learning, python
-description: 赵志勇《python机器学习算法》
+tags: machine&learning, python
+description: 
 ---
 
-### 0 绪论
+## 0 绪论
 
-#### 概念
-
-> 现在，当人们提及机器学习时，往往是指统计机器学习。
-> <p align="right">——李航《统计学习方法》</p>
-
-#### 分类
+### 分类
 
 - **监督学习（Supervised Learning）**：训练数据包含了类别信息，典型问题是分类（Classification）和回归（Regression），典型算法有Logistic Regression、BP神经网络和线性回归算法。
 - **无监督学习（Unsupervised Learning）**：训练数据中不包含类别信息，典型的问题是聚类（Clustering），代表算法为K-Means、DBSCAN算法等。
@@ -24,7 +19,9 @@ description: 赵志勇《python机器学习算法》
 
 分类和回归算法的最主要的区别是，分类算法中的类别是离散的值，如广告点击问题中的类别是 {+1, -1}，分别表示点击和未点击；而回归算法中的类别是连续的值，如通过人的身高、体重、性别信息预测人的年龄（年龄是连续的正整数）。
 
-##### 流程
+# 第四部分 推荐算法
+
+## 14 协同过滤（Collaborative Filtering, CF）算法
 
 
 
