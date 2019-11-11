@@ -1,3 +1,13 @@
+---
+layout: post
+title: 《计算机网络：自顶向下方法》学习笔记（更新中）
+category: 学习
+tags:
+description: 
+---
+
+
+
 # 计算机网络：自顶向下方法 Computer Network: A Top Down Approach
 
 ## Chapter 2 Application Layer
@@ -505,7 +515,7 @@
 
 3. TCP 报文段（segment）格式
 
-   <img src="C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111114807225.png" alt="image-20191111114807225" style="zoom:67%;" />
+   <img src="https://s2.ax1x.com/2019/11/11/MlJDns.png" alt="image-20191111114807225" style="zoom:67%;" />
 
    - 头部（header）：20 bytes
 
