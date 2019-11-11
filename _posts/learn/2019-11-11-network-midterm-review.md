@@ -44,7 +44,7 @@
 
    - socket 也被称为应用层和网络层之间的应用编程接口（Application Programming Interface），应用开发者对于应用层的部分有控制权，但对网络层部分没有什么权限
 
-   ![image-20191109141421293](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191109141421293.png)
+   ![](https://s2.ax1x.com/2019/11/11/MlJ80I.png)
 
 3. 进程寻址（Process Addressing）
 
@@ -103,7 +103,7 @@
 
 3. 今天的因特网虽然可以为时间敏感的应用提供满意的服务，但是它仍不能提供对吞吐量和延时限制的保证
 
-![image-20191109161118310](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191109161118310.png)
+![image-20191109161118310](https://s2.ax1x.com/2019/11/11/MlJlXd.png)
 
 
 
@@ -135,7 +135,7 @@
 
    -  统一资源定位系统（uniform resource locator，URL）：定位对象的标识符，由主机名（hostname）和路径名（pathname）组成，用于寻址某一特定对象
 
-     ![image-20191109235137589](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191109235137589.png)
+     ![image-20191109235137589](https://s2.ax1x.com/2019/11/11/MlJM1e.png)
 
 2. Web 应用在应用层使用 HTTP 协议
 
@@ -159,7 +159,7 @@
    
      - non-persistent connection：2 RTT + transmisson time
    
-       <img src="C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110122736681.png" alt="image-20191110122736681" style="zoom:50%;" />
+       <img src="https://s2.ax1x.com/2019/11/11/MlJ3nA.md.png" style="zoom:50%;" />
    
 4. 两种消息格式：
 
@@ -184,7 +184,7 @@
 
      - entity body：POST 方法需要，用户提交的内容
 
-       ![image-20191110123920991](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110123920991.png)
+       ![image-20191110123920991](https://s2.ax1x.com/2019/11/11/MlJQ6H.md.png)
 
      - 使用 GET 方法提交表单时，不需要填写 Entity body 字段，而是将用户填写的信息放在 request line 的 URL 字段，如：<font style="font-family:courier; font-weight=800">www.somesite.com/animalsearch?monkeys&bananas</font>
 
@@ -195,7 +195,7 @@
        - HTTP version
        - 状态码（status code）
 
-       <img src="C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110132850837.png" alt="image-20191110132850837" style="zoom:50%;" />
+       <img src="https://s2.ax1x.com/2019/11/11/MlJYAP.md.png" style="zoom:50%;" />
 
        - 状态描述（status phrase）
 
@@ -212,7 +212,7 @@
 
      - entity body：返回的对象文件
 
-     ![image-20191110131328647](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110131328647.png)
+     ![image-20191110131328647](https://s2.ax1x.com/2019/11/11/MlJG7t.png)
 
    - header line 可选非常多，不胜枚举
 
@@ -261,7 +261,7 @@
 
    所以 FTP 中控制信息的传输是 out-of-band 的（同理，HTTP 和 SMTP 中控制信息的传输是 in-band 的）
 
-   ![image-20191110151458733](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110151458733.png)
+   ![image-20191110151458733](https://s2.ax1x.com/2019/11/11/MlJNh8.png)
 
 2. 建立过程
    - client 发起 TCP 连接（控制连接），端口号 21
@@ -294,7 +294,7 @@
    - Bob 的 mail server 收到邮件并保存在 mailbox 中
    - 当 Bob 查看他的邮件时，这封邮件将被从 mailbox 中取出
 
-   ![image-20191110212136691](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191110212136691.png)
+   ![image-20191110212136691](https://s2.ax1x.com/2019/11/11/MlJa9S.png)
 
 3. SMTP 协议概述
 
@@ -349,6 +349,7 @@
      - ……
 
    - DNS 应用提供的其他服务：
+     
      - host aliasing
    - 所有 DNS 请求和应答都通过 UDP 数据包传输，端口号 53
 
@@ -393,7 +394,7 @@
 
        端口号是 16 位数字（0\~65535），0\~1023 是周知端口（well known port numbers）
 
-   ![image-20191111102719060](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111102719060.png)
+   ![image-20191111102719060](https://s2.ax1x.com/2019/11/11/MlJwcQ.png)
 
 2. 分用（demultiplexing）
 
@@ -419,9 +420,7 @@
      - 重新传输（retransmission）：收件方收到错误数据时可以发送回执 NAK，要求发送方重新发送
    - 由于在这类协议中，仅当 sender 确认 receiver 已经正确收到当前数据包才会发送下一个，所以这类协议也叫做 **stop-and-wait** 协议
 
-   有限状态机（FSM）表示：
-
-   ![image-20191111205826706](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111205826706.png)
+   有限状态机（FSM）表示：![image 20191111205826706](https://s2.ax1x.com/2019/11/11/MlJrBn.png) 
 
 3. idt 2.1 （improved version of idt 2.0）
 
@@ -430,9 +429,9 @@
 
    FSM 表示：
 
-   ![image-20191111212512209](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111212512209.png)
+    ![image 20191111212512209](https://s2.ax1x.com/2019/11/11/MlJ6A0.png)  
 
-   ![image-20191111212533557](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111212533557.png)
+   ![](https://s2.ax1x.com/2019/11/11/MlJcNV.md.png)
 
 4. idt 2.2
 
@@ -440,9 +439,9 @@
 
    FSM 表示：
 
-   ![image-20191111213731945](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111213731945.png)
+   ![image-20191111213731945](https://s2.ax1x.com/2019/11/11/MlJghT.png)
 
-   ![image-20191111213903035](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111213903035.png)
+   ![image-20191111213903035](https://s2.ax1x.com/2019/11/11/MlJR9U.png)
 
 5. idt 3.0
 
@@ -463,7 +462,7 @@
        - **Go-Back-N**
        - **selective repeat（SR）**
 
-     ![image-20191111214926283](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191111214926283.png)
+     ![image-20191111214926283](https://s2.ax1x.com/2019/11/11/MlJW3F.png)
 
 
 
