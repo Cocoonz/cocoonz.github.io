@@ -7,8 +7,12 @@ description:
 ---
 
 
-
-[TOC]
+$$
+\begin{equation}
+a = b + c
+\end{equation}
+$$
+$\frac{a}{c}$ is a inline mathjax
 
 
 
