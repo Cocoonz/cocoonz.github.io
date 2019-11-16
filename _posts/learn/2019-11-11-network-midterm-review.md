@@ -14,8 +14,6 @@ a = b + c
 $$
 $\frac{a}{c}$ is a inline mathjax
 
-\\(\frac{a}{c}\)
-
 ## Chapter 2 Application Layer
 
 ### 网络应用架构（Network application architectures）
