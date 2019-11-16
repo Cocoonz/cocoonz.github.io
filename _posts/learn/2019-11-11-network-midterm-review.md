@@ -2,17 +2,11 @@
 layout: post
 title: 《计算机网络：自顶向下方法》学习笔记（更新中）
 category: 学习
-tags:
+tags: computer science
 description: 
 ---
 
 
-$$
-\begin{equation}
-a = b + c
-\end{equation}
-$$
-$\frac{a}{c}$ is a inline mathjax
 
 ## Chapter 2 Application Layer
 
@@ -257,7 +251,7 @@ $\frac{a}{c}$ is a inline mathjax
    - 既是 server 又是 client
    - 由当地 ISP 购置和安装
    - 优点：
-     - 大大降低了响应时间（尤其当 $$bandwidth_{client-server} << bandwidth_{client-cache}$$ 时，通常 client 与 cache 之间的通信都是迅速的）
+     - 大大降低了响应时间（尤其当 $bandwidth_{client-server} << bandwidth_{client-cache}$ 时，通常 client 与 cache 之间的通信都是迅速的）
      - 整体上减小了全网络的交通量，提高了所有应用的性能
 
    - conditional GET：cache 给服务器发送请求时带上头部  <font style="font-family:courier;font-weight:bold">If-Modified-Since:</font>，如果在这个时间之后对象更新过，服务器返回最新的对象文件；否则不返回任何 entity body 字段，但需要在 status code 字段指明 <font style="font-family:courier;font-weight:bold">304 Not Modified</font>
@@ -487,7 +481,7 @@ $\frac{a}{c}$ is a inline mathjax
          
          - 收到的数据包顺序错误也会被拒绝，返回的 ACK 包含最后收到的顺序正确的序列号
          
-         - 使用 累积确认（cumulative acknowledgement），即确认了第 $$n$$ 个，表明已经确认了 $$n$$ 以下的所有数据包
+         - 使用 累积确认（cumulative acknowledgement），即确认了第 $n$ 个，表明已经确认了 $n$ 以下的所有数据包
          
          - 对于丢包问题，使用超时事件（timeout event）
          
@@ -515,7 +509,7 @@ $\frac{a}{c}$ is a inline mathjax
        
          - sender 和 receiver 的窗口状态未必一致
        
-         - 窗口大小必须 $$\leq$$ 序列号范围长度的一半
+         - 窗口大小必须 $\leq$ 序列号范围长度的一半
        
             ![page0](https://s2.ax1x.com/2019/11/11/MlcIDx.png) 
        
