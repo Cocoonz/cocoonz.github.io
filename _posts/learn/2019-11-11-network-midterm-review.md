@@ -6,6 +6,24 @@ tags: computer science
 description: 
 ---
 
+$a\neq b$ is inline
+
+
+$$
+display \cdot math \cdot block
+$$
+
+
+\[
+
+this is a display math block
+
+\]
+
+
+
+\$inline math block\$
+
 
 
 ## Chapter 2 Application Layer
@@ -251,7 +269,7 @@ description:
    - 既是 server 又是 client
    - 由当地 ISP 购置和安装
    - 优点：
-     - 大大降低了响应时间（尤其当 $bandwidth_{client-server} << bandwidth_{client-cache}$ 时，通常 client 与 cache 之间的通信都是迅速的）
+     - 大大降低了响应时间（尤其当 \[bandwidth_{client-server} << bandwidth_{client-cache}​\[ 时，通常 client 与 cache 之间的通信都是迅速的）
      - 整体上减小了全网络的交通量，提高了所有应用的性能
 
    - conditional GET：cache 给服务器发送请求时带上头部  <font style="font-family:courier;font-weight:bold">If-Modified-Since:</font>，如果在这个时间之后对象更新过，服务器返回最新的对象文件；否则不返回任何 entity body 字段，但需要在 status code 字段指明 <font style="font-family:courier;font-weight:bold">304 Not Modified</font>
