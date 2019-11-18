@@ -191,13 +191,13 @@ categories: 学习
 
       🌰：求出每个系的平均工资
 
-      $_{dept\_name}𝒢_{avg(salary)}(instructor)$
+      $ _{dept\_name}𝒢_{avg(salary)}(instructor) $
 
-- 可以用 $\$1, \$2,\cdots $ 分别指代关系中的第一个属性、第二个属性等
+- 可以用 \$1，\$2，… 分别指代关系中的第一个属性、第二个属性等
 
 #### 元组关系演算（非过程化）
 
-一般形式：$$\{t \space | \space P(t) \}$$，其中 $t$ 是元组，$P$ 是公式，元组演算的公式由**原子**构成，这是一个递归的定义
+一般形式：$ \{t \space | \space P(t) \}$$，其中 $ $t$ 是元组，$P$ 是公式，元组演算的公式由**原子**构成，这是一个递归的定义
 
 ![image-20191027164306446](C:%5CUsers%5Caqyjz%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20191027164306446.png)
 
