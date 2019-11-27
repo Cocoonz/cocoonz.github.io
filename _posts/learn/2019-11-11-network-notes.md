@@ -593,3 +593,111 @@ description:
        - URG：指明存在紧急（urgent）信息，地址由 urgent data pointer 字段（16 bits）说明
 
      - 选项字段（可选，变长）：发送方和接收方需要商讨 MSS 等
+
+
+
+## Chapter 4 Network Layer
+
+### 总览
+
+- （4.1）网络层的数据包叫做 **datagram**
+
+- （4.1.1）网络层的任务：将数据包从发送主机送到接收主机
+
+    > The role of the network layer is thus deceptively simple—to move packets from a
+    > sending host to a receiving host.
+
+    为了完成这个任务，需要 2 个主要功能：
+
+    - **转发（forwarding）**：当一个数据包到达路由器的输入链路（input link）时，路由器需要将它送到合适的输出链路（output link）
+        - 每个路由器都保存了一个**转发表（forwarding table）**，通过对比数据包的头部与转发表决定数据包的去向
+    - **路由（routing）**：路由器需要根据路由算法（routing algorithm）计算出数据包从发送主机到接收主机需要经过的路径
+        - 路由算法决定了向转发表中插入什么值
+        - 路由算法可以是中心化的（centralized）也可以是去中心化的（decentralized）
+
+    注意以上两者的区别，转发是路由器本地（router-local）的操作，路由是整个网络层面（network-wide）的操作
+
+    - 一些网络还需要连接建立（connection setup）功能，路径中的路由器之间相互握手
+
+- 交换机（packet switch）：依据头部字段，将数据包从输入链路接口转发到相应输出链路接口的设备
+
+    > a general packet-switching device that transfers a packet from input link interface to output link interface, according to the value in a field in the header of the packet.  
+
+    - 链路层交换机（link-layer switches）：依据的是链路层结构（link-layer frame）字段的值
+    - 路由器（router）：网络层交换机，依据的是网络层字段的值
+
+
+
+
+### 虚拟电路网络 & 数据包网络
+
+- （4.2）虽然网络层与传输层的服务都分为有连接和无连接两种，但是它们有一些本质区别：
+
+    1. 网络层的服务是由网络层为传输层提供的**主机到主机（host-to-host）**的服务，传输层的服务是由传输层为应用层提供的**进程到进程（process-to-process）**的服务
+
+        > In the network layer, these services are host-to-host services provided by the network layer for the transport layer. In the transport layer these services are processto-process services provided by the transport layer for the application layer.
+
+    2. 只提供有连接服务的网络称为**虚拟电路网络（virtual-circuit networks, VC）**，只提供无连接服务的网络称为**数据报网络（datagram networks）**
+    3. 传输层由终端（end systems）建立连接，网络层中由路由（routers）建立连接
+
+- （4.2.1）虚拟电路网络
+
+    - 其中的连接（connections）称为虚拟电路（virtual circuits，VCs），组成部分：
+
+        1. 路径（path）：包括若干路由器和路由器间的链路（links），连接源主机和目标主机
+        2. **VC 号（VC numbers）**：用于标识路径中的每条链路，在 VC 建立阶段由网络层分配
+        3. 转发表中的表项（entries）：用于标识路由器
+
+    - 每个数据包在头部包含 VC 号字段，当这个数据包途径路径中的一个路由器时，路由器查找转发表，更新 VC 号的数据
+
+    - 路由器必须保存正在进行的连接的连接状态信息（connection state information）：VC 建立时，路由器在自己的转发表中添加相应表项，VC 断开时移除这些表项
+
+    - VC 建立的阶段：
+
+        - VC 建立（VC setup）：源主机通知网络层希望建立连接并指明目标主机地址，网络层规划路径、为每条链路分配 VC 号、为途中路由器的转发表添加相应表项并为连接预留资源
+        - 数据传递（data transfer）
+        - VC 拆除（VC teardown）：删除先前在转发表中添加的表项
+
+    - **网络层的连接是两个终端系统之间的连接**，路径中的路由器对此并不知情
+
+        > Connection setup at the transport layer involves only the two end systems.
+        >
+        > ... the routers within the network are completely oblivious to it.
+
+    - 发起（initiate）和终止（terminate）连接的消息称为信号消息（signaling messages），约束它们的协议称为信号协议（signaling protocols）
+
+- （4.2.2）数据报网络
+
+    - 不需要预先建立连接，也不需要路由器保存连接状态信息
+    - 当数据包到达一个路由器时，该路由器依据转发表决定将数据包发往哪个输出链路（outgoing link）
+        - 前缀匹配（prefix match）：表项格式（地址的前 N 位，输出链路）
+        - 最长前缀匹配规则（longest prefix matching rule）：本规则适用于前缀匹配方法中一个地址可能匹配多个前缀的情况
+
+    - 路由器中的转发表由路由算法（routing algorithm）修改，在 VC 网络中每条新连接建立都需要修改，在数据报网络中可能定期修改
+
+
+
+### 路由器的结构
+
+
+
+### IP 协议
+
+*How addressing and forwarding are done in the Internet*
+
+- 网络层结构概览
+
+    <img src="https://s2.ax1x.com/2019/11/26/MzcjRe.png" style="zoom: 50%;" />
+
+- IPv4 数据报格式
+
+     <img src="https://s2.ax1x.com/2019/11/26/Mzg8WF.png" style="zoom: 50%;" /> 
+
+    - 版本号（version）：4 bits
+    - 头部长度（header length）：4 bits，用于指明报文内容从何处开始。大多数 IP 报文不包含可选项，典型的头部长度为 20 bits
+    - 服务类型（type of service，TOS）
+    - 数据报长度（datagram length），以 Bytes 为单位：头部 + 数据的总长度，16 bits（∴IP 报文的理论上的最大长度为 65535 字节，尽管事实上很少有报文超过 1500 字节）
+    - 标识符（identifier）、标识（flags）、分段偏移（fragmentation offset）：用于 IP 分段（IP fragmentation），IPv6 不支持
+    - 存活时间（time-to-live，TTL）：每当数据报被路由器处理一次，TTL 减一，当 TTL = 0 时，数据报被丢弃
+    - 上层协议（Upper-layer protocol）：仅在终点使用
+    - 
