@@ -768,4 +768,19 @@ description:
 
 ## Chapter 5 Link Layer
 
-### 
+### Introduction
+
+- 术语
+  - 节点（node）：运行链路层协议的设备
+  - 链路（link）：连接相邻两个节点的通讯频道
+  - 网络适配器（network adapter / network interface card, NIC）：特殊用途的芯片，用于执行链路层的种种服务，是链路层协议执行的场所
+- 链路层提供的服务：
+  - 装帧（framing）：将网络层的数据报（datagram）封装为帧（frame）
+  - 链路访问（link access）：MAC 协议规定帧如何被传输到链路上
+  - 可靠传输（reliable delivery）：保证网络层数据报无误传输
+  - 错误检测和校正（error detection and correction）：链路层的错误检测技术比较成熟，通常由硬件完成
+    - 奇偶校验位（parity bit）
+      - 1-D 奇偶校验
+      - 2-D 奇偶校验
+    - 校验和（checksum）
+    - 循环冗余检测（cyclic redundant check, CRC）
