@@ -352,13 +352,128 @@ where not exists
 
 
 
+## Chapter 7 数据库设计和 E-R 模型
+
+### 数据库设计阶段
+
+设计数据库模式、设计访问更新数据库的程序以及设计控制数据访问的安全模式
+
+- 概念设计阶段：构建实体-联系图
+- 逻辑设计阶段：将实体-联系图映射到关系模式
+- 物理设计阶段：指明数据库文件组织格式和索引结构
+
+### 实体-联系模型
+
+实体-联系（E-R）模型是一种<font color="blue">语义</font>模型，在将现实世界事物的<font color="blue">含义</font>和相互<font color="blue">关联</font>映射到概念模式方面非常有用
+
+一个数据库可以被建模为：实体的集合、实体间的联系
+
+- 三个基本概念：<font color="blue">实体集、联系集、属性</font>
+  - 实体集
+    - <font color="blue">实体</font>：现实世界可<font color="blue">区别于</font>所有其他对象的一个“事物”或“对象”
+    - <font color="blue">实体集</font>：相同类型的实体集合
+    - 实体集的<font color="blue">外延</font>：属于实体集的集体的实际集合
+    - 实体集的<font color="blue">属性</font>：实体集中每个成员所拥有的描述性性质，**是将实体集映射到域的函数**
+  - 联系集
+    - <font color="blue">联系</font>：多个实体间的相互关联
+    - <font color="blue">联系集</font>：想同类型联系的集合
+    - 联系集也可以有属性，🌰 instructor 和 student 之间的联系集 advisor 可以有属性 date 以表示教师成为学生的导师的日期
+    - 实体的<font color="blue">角色</font>：实体在联系中扮演的功能（隐含，通常不指定）
+    - 当同样的实体集参与一个联系集多于一次，这类联系集称作是<font color="blue">自环的</font>
+    - <font color="blue">度</font>：参与联系集的实体集的数目
+      - 事实上涉及两个实体集以上的联系是很少的
+      - <font color="blue">二元联系集</font>：度为 2，数据库系统中大多数联系集都是二元的
+  - 属性
+    - 实体通过一组属性来表示，属性是实体集中每个成员所拥有的描述性性质
+    - <font color="blue">域</font>：每个属性可取值的集合，也叫值域
+    - 类型
+      - 简单、复合
+      - 单值、多值
+      - 派生属性（不存储，需要时计算出来）、基属性
+
+### 约束
+
+- 映射基数约束
+
+  - <font color="blue">映射基数</font>（基数比率）：一个实体通过一个联系集能关联的实体的个数
+
+    描述二元联系集时取值为下列之一：
+
+    - 一对一
+    - 一对多
+    - 多对一
+    - 多对多
+
+- 参与约束
+
+  - 全部（total）参与：实体集 $E$ 中的每个实体都参与到联系集 $R$ 的至少一个联系中
+  - 部分（partial）参与
+
+- 码
+
+  - 实体集的码
+    - <font color="blue">超码</font>：一个或多个能唯一地标识实体的属性（集）
+    - <font color="blue">候选码</font>：最小的超码 
+    - <font color="blue">主码</font>：被选择用来区分实体的候选码，**主码只有一个，候选码可以有多个**
+  - 联系集的码（看 PPT 写不清楚）
+    - 相关的实体集的主码的集合形成了联系集的超码
+
+### E-R 图（看 PPT）
+
+- 矩形 -> 实体集，属性在实体矩阵中列出，构成主码的属性用下划线标注，菱形 -> 联系集
+
+- 全部参与 -> 两条线
+
+- 联系集的属性 -> 矩形，用虚线连接到联系集上
+
+- 基数约束：从联系集指向实体集的箭头 -> 一，一条线段 -> 多（**注意多个包括 0 个**）
+
+- 基数约束也可以用参与约束表示
+
+   <img src="https://s2.ax1x.com/2020/01/06/lykcXn.png" alt="微信截图 20200106194910" style="zoom:67%;" /> 
+
+- 复合、多值、派生属性的表示（PPT 上也没有？）
+
+- <font color="blue">弱实体集</font>：一个没有足够的属性形成主码的实体集
+
+  - 弱实体集依赖于标识实体集
+  - 将弱实体集与其标识实体集相连的联系称为<font color="blue">标识性联系</font>（用双边框的菱形表示）
+  - <font color="blue">部分码（分辨符）</font>：区分弱实体集中实体的属性集合（用虚下划线表示）
+  - <font color="blue">弱实体集的主码</font>由<font color="blue">标识实体集的主码</font>和该弱实体集的部分码共同组成
+  - 弱实体集可能与不止一个标识实体集关联
+
+- 表示方法总结
+
+   <img src="https://s2.ax1x.com/2020/01/06/lyV7cQ.png" alt="微信截图 20200106201125" style="zoom:67%;" />
+
+   <img src="https://s2.ax1x.com/2020/01/06/lyVT1g.png" alt="微信截图 20200106194910" style="zoom:67%;" />  
+
+  
+
+### :star:转换为关系模式
+
+- 能表示成 E-R 模式的一定能表示成关系模式
+- 从强实体集转换而来的模式与强实体集具有**相同属性和主码**
+- 从弱实体集转换而来的模式包含**弱实体集的属性和标识强实体集的主码**（需要添加相应的外码约束和完整性约束）
+- （8.2）E-R 模型允许出现多值属性（一个人可以拥有多个电话号码）以及组合属性（地址分为城市、街道、门牌号），在转换为关系模式的时候，要消除这种子结构。对于多值属性，为每个值创建一个新的元组，对于组合属性，让每个子属性成为一个独立的属性。
+
+### 扩展的 E-R 特性
+
+- <font color="blue">自顶向下</font>的设计过程：从初始实体集到一系列不同层次的实体子集的细化
+  - <font color="blue">特化</font>：在实体集内部进行分组的过程，用空心箭头表示
+- <font color="blue">自底向上</font>设计过程：多个实体集根据共同具有的特征综合成一个较高层的实体集
+  - <font color="blue">概化</font>：高层实体集与一个或多个低层实体集间的包含关系，在 E-R 图中的表示与特化相同，二者互为逆过程
+- 高层和低层实体集可以形成<font color="blue">超类-子类</font>
+
+
+
 ## Chapter 8 关系数据库设计
 
-### 名词
+### 基本概念
 
 - （习题 8.16）**主属性**（prime attribute）：至少在一个候选码中出现的属性
 
-- （8.4.3）**无关属性**（extraneous attribute）：如果去除函数依赖集中的一个属性不改变该函数依赖集的闭包，则这个属性是无关属性
+- （8.4.3）<font color="blue">**无关属性**</font>（extraneous attribute）：如果去除函数依赖集中的一个属性不改变该函数依赖集的闭包，则这个属性是无关属性
 
 - （8.3）字母表示法：
 
@@ -372,55 +487,69 @@ where not exists
 
 - （8.2）如果一个域的元组都是不可再分的，称这个域是**原子的**（atomic）。
 
-
-
 ### 核心概念
 
 说明： $R$ 表示关系模式，$f,F$ 表示关系模式上的函数依赖集，$\alpha,\beta,\gamma,\delta$ 表示 $R$ 中的属性集，$A,B,C$ 表示单个属性
 
 - 函数依赖
 
-    - **函数依赖**（functional dependency），也称为相等产生依赖（equality-generating dependency）
+    - <font color="blue">**函数依赖**</font>（functional dependency），也称为相等产生依赖（equality-generating dependency）
 
-        - 如果每个 $\alpha$ 的特定值至多对应一个 $\beta$，称作 $\alpha$ 函数确定 $\beta$，或者 $\beta$ 函数依赖于 $\alpha$，记作 $\alpha \rightarrow \beta$ 
+        - 设 $r(R)$ 是一个关系模式，$\alpha \subseteq R$，$\beta \subseteq R$，模式 $R$ 上的函数依赖 $\alpha \to \beta$ 成立的条件是：**对于任意关系实例 $r$ 中任意两个元组 $t_1$ 和 $t_2$，$t_1[\alpha]=t_2[\alpha] \Rightarrow t_1[\beta]=t_2[\beta]$**
+        - 如果**每个 $\alpha$ 的特定值至多对应一个 $\beta$**，称作 $\alpha$ 函数确定 $\beta$，或者 $\beta$ 函数依赖于 $\alpha$，记作 $\alpha \rightarrow \beta$ 
+        - <font color="blue">部分函数依赖</font>：存在 $\alpha$ 的真子集 $\gamma$ 使得 $\gamma \to \beta$，则 $\alpha \rightarrow \beta$ 是部分依赖
+        - 函数依赖是“码"的概化（generalization），能表达超码不能表达的约束
+        - （8.3.1）如果一个函数依赖在所有关系上都满足，那么它是**<font color="blue">平凡的</font>**（trivial），**如果 $\beta \subset \alpha$，那么形如 $\alpha \rightarrow \beta$ 的函数依赖是平凡的**
 
-        - 函数依赖是“码"的概化（generalization）
+    - 码
 
-        - （8.3.1）如果一个函数依赖在所有关系上都满足，那么它是**平凡的**（trivial），如果 $\beta \subset \alpha$，那么形如 $\beta \rightarrow \alpha$ 的函数依赖是平凡的
+        - <font color="blue">超码</font>：若一个或多个属性的集合 $\{A_1,A_2,\dots,A_n\}$ 函数确定该关系中其他全部属性，则称该属性为该关系的超码，即记 $K=\{A_1,A_2,\dots,A_n\}$，$K\to R$，则 $K$ 是关系模式 $R$ 的超码
+        -  候选码、外码
 
-        - **闭包**（closure）
+    - **闭包**（closure）
 
-            - （8.3.1）**函数依赖集的闭包**：给定函数依赖集 $F$，我们使用 $F^+$ 表示由 $F$ 推导出的所有函数依赖的集合，称为 $F$ 的闭包
+        - （8.3.1）**<font color="blue">函数依赖集的闭包</font>**：给定函数依赖集 $F$，我们使用 $F^+$ 表示**由 $F$ 推导出的所有函数依赖的集合**，称为 $F$ 的闭包
 
-                - $F^+$ 是 $F$ 的超集
-                - 🌰：$F = \{ A \rightarrow B, B \rightarrow C \}$, 我们可以推导出 $A \rightarrow C$
+            - $F^+$ 是 $F$ 的超集
 
-            - （8.4.2）**属性集的闭包**：函数依赖集 $F$ 下被 $\alpha$ 函数确定的所有属性的集合称为 $F$ 下 $\alpha$ 的闭包，记作 $\alpha^+$（$\alpha^+_F$，在下标指明函数依赖集）
+              🌰 $F = \{ A \rightarrow B, B \rightarrow C \}$, 我们可以推导出 $A \rightarrow C$
 
-                用途：
+        - （8.4.2）**<font color="blue">属性集的闭包</font>**：函数依赖集 $F$ 下**被 $\alpha$ 函数确定的所有属性的集合**称为 $F$ 下 $\alpha$ 的闭包，记作 $\alpha^+$（$\alpha^+_F$，在下标指明函数依赖集）
 
-                - 若 $\alpha^+ = R$，则 $\alpha$ 是 $R$ 的一个超码
-                - 若 $\beta \subseteq \alpha^+$，则 $\alpha \rightarrow \beta$
-                - 计算 $F^+$：对 $\forall \gamma \subseteq R$，找出 $\gamma^+$；对 $\forall S \subseteq \gamma^+$，函数依赖 $\gamma \rightarrow S$ 属于 $F^+$
+            用途：
 
-            - （8.6.1）**函数依赖和多值依赖集的闭包**：函数依赖和多值依赖 $D$ 的闭包 $D^+$ 是由 $D$ 逻辑蕴含的所有函数依赖和多值依赖的集合
+            - <font color="blue">判断超码</font>：若 $\alpha^+ = R$，则 $\alpha$ 是 $R$ 的一个超码
+            - <font color="blue">验证函数依赖</font>：若 $\beta \subseteq \alpha^+$，则 $\alpha \rightarrow \beta$
+            - <font color="blue">计算 $F$ 的闭包</font>：计算 $F^+$：对 $\forall \gamma \subseteq R$，找出 $\gamma^+$；对 $\forall S \subseteq \gamma^+$，函数依赖 $\gamma \rightarrow S$ 属于 $F^+$
 
-            - **Armstrong 公理**（Armstrong's axiom）：用于寻找逻辑蕴含（logically imply）的函数依赖，反复应用 Armstrong 公理可以求函数依赖集 $F$ 的闭包 $F^+$
+        - （8.6.1）**函数依赖和多值依赖集的闭包**：函数依赖和多值依赖 $D$ 的闭包 $D^+$ 是由 $D$ 逻辑蕴含的所有函数依赖和多值依赖的集合
 
-                - 自反律：若 $\beta \subseteq \alpha$，则 $\alpha \rightarrow \beta$
-                - 增补律：若 $\alpha \rightarrow \beta$，则 $\gamma \alpha \rightarrow \gamma \beta$
-                - 传递律：若 $\alpha \rightarrow \beta$ 且 $\beta \rightarrow \gamma$，则 $\alpha \rightarrow \gamma$
+    - （8.4.3）**正则覆盖**（canonical cover）：
 
-                其他一些规则：
+        - $F$ 的正则覆盖 $F_c$ 是一个函数依赖集，并且：
+            - $F$ 逻辑蕴含 $F_c$ 中的所有依赖
+            - $F_c$ 逻辑蕴含 $F$ 中的所有函数依赖
+            - $F_c$ 中任何函数依赖都**不含无关属性**
+            - $F_c$ 中函数依赖的**左半部都是不同的**
+        - <font color="blue">正则覆盖去除了冗余依赖</font>
+        - <font color="blue">正则覆盖 $F_c$ 和 $F$ 具有相同的函数依赖集闭包</font>
 
-                - 合并律：若 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$，则 $\alpha \rightarrow \beta \gamma$
-                - 分解律：若 $\alpha \rightarrow \beta \gamma$，则 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$
-                - 伪传递率：若 $\alpha \rightarrow \beta$ 且 $\gamma \beta \rightarrow \delta$，则 $\gamma \alpha \rightarrow \delta$
+    - ⭐⭐**<font color="blue">Armstrong 公理</font>**（Armstrong's axiom）：用于寻找逻辑蕴含（logically imply）的函数依赖，反复应用 Armstrong 公理可以求函数依赖集 $F$ 的闭包 $F^+$
 
-        - 部分函数依赖：函数依赖 $\alpha \rightarrow \beta$ 是**部分依赖**（partial dependency）的条件是：存在 $\alpha$ 的真子集 $\gamma$，使得 $\gamma \rightarrow \beta$
+        Armstrong 公理是<font color="blue">有效的、完备的</font>
+        
+        - 自反律：若 $\beta \subseteq \alpha$，则 $\alpha \rightarrow \beta$
+    - 增补律：若 $\alpha \rightarrow \beta$，则 $\gamma \alpha \rightarrow \gamma \beta$
+        - 传递律：若 $\alpha \rightarrow \beta$ 且 $\beta \rightarrow \gamma$，则 $\alpha \rightarrow \gamma$
 
+        其他一些规则：
+        
+        - 合并律：若 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$，则 $\alpha \rightarrow \beta \gamma$
+        - 分解律：若 $\alpha \rightarrow \beta \gamma$，则 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$
+        - 伪传递率：若 $\alpha \rightarrow \beta$ 且 $\gamma \beta \rightarrow \delta$，则 $\gamma \alpha \rightarrow \delta$
+        
         - 传递函数依赖：令 $\alpha$ 和 $\beta$ 为属性集，使得 $\alpha \rightarrow \beta$ 成立而 $\beta \rightarrow \alpha$ 不成立。令 $A$ 为一个属性，它既不属于 $\alpha$ 也不属于 $\beta$，并且 $\beta \rightarrow A$ 成立。则 $A$ **传递依赖**（transitive dependency）于 $\alpha$
-
+        
     - （8.6.1）**多值依赖**（multivalued dependency），也称为元组产生依赖（tuple generating dependency）
 
         - 记作 $\alpha \rightarrow\rightarrow \beta$
@@ -429,55 +558,66 @@ where not exists
         - 性质：
             - 若 $\alpha \rightarrow \beta$，则 $\alpha \rightarrow\rightarrow \beta$，即每一个函数依赖都是一个多值依赖
             - 若 $\alpha \rightarrow \beta$，则 $\alpha \rightarrow\rightarrow R - \alpha - \beta$
-
-- （8.4.1）**逻辑蕴含**（logically imply）：如果每一个满足函数依赖集 $f$ 的实例都满足函数依赖集 $F$，则称 $f$ 被 $F$ 逻辑蕴含
-
-- （8.4.3）**正则覆盖**（canonical cover）：$F$ 的正则覆盖 $F_c$ 是一个函数依赖集，并且：
-
-    -  $F$ 逻辑蕴含 $F_c$ 中的所有依赖
-    - $F_c$ 逻辑蕴含 $F$ 中的所有函数依赖
-    - $F_c$ 中任何函数依赖都不含无关属性
-    - $F_c$ 中函数依赖的左半部都是不同的
-
-- （8.2）E-R 模型允许出现多值属性（一个人可以拥有多个电话号码）以及组合属性（地址分为城市、街道、门牌号），在转换为关系模式的时候，要消除这种子结构。对于多值属性，为每个值创建一个新的元组，对于组合属性，让每个子属性成为一个独立的属性。
+        
+    - （8.4.1）**<font color="blue">逻辑蕴含</font>**（logically imply）：如果每一个满足函数依赖集 $f$ 的实例都满足函数依赖集 $F$，则称 $f$ 被 $F$ 逻辑蕴含
 
 
+- 规范化
+  - 无数据冗余（符合一定范式）
+  - 分解是无损连接分解
+  - 最好分解是保持依赖的
 
-- 范式
+- ⭐⭐范式（Normal Form）
 
-    - （8.2）**第一范式**（1NF，First Normal Format）：所有属性的域都是原子的关系模式
+    - 各范式之间的关系：
+$$
+        1NF \supset 2NF \supset 3NF \supset BCNF \supset 4NF \supset 5NF
+$$
+        
+- （8.2）**第一范式**（1NF，First Normal Format）：所有属性的域都是<font color="blue">原子</font>的关系模式
+    
+        - 非原子的值会造成<font color="blue">复杂存储</font>和<font color="blue">数据冗余</font>
+    
+    - （习题 8.17）**<font color="blue">第二范式</font>**（2NF）：若关系模式 $R \in 1NF$，且在 $F^+$ 中<font color="blue">每一个非主属性**完全**函数依赖于候选码</font>，则 $R \in 2NF$  （**消除了 1NF 中的部分函数依赖**）
+    
+    - **<font color="blue">第三范式</font>**（3NF）
 
-    - （习题 8.17）**第二范式**（2NF）：若关系模式 $R \in 1NF$，且在 $F^+$ 中**每一个非主属性完全函数依赖于候选码**，则 $R \in 2NF$  （**消除了 1NF 中的部分函数依赖**）
-
-    - **第三范式**（3NF）：若关系模式 $R \in 2NF$，且不存在属性函数依赖于其他非主属性（**消除了 2NF 中的传递函数依赖**）
-
-        - （8.3.4）具有函数依赖集 $F$ 的关系模式 $R$ 属于 3NF 的条件是，对于 $F^+$ 中**所有**形如 $\alpha \rightarrow \beta$ 的函数依赖，以下至少有一项成立：
+        - 若关系模式 $R \in 2NF$，且不存在属性函数依赖于其他非主属性（**消除了 2NF 中的传递函数依赖**）
+    - （8.3.4）具有函数依赖集 $F$ 的关系模式 $R$ 属于 3NF 的条件是，对于 $F^+$ 中**所有**形如 $\alpha \rightarrow \beta$ 的函数依赖，以下至少有一项成立：
             - $\alpha \rightarrow \beta$ 是平凡的函数依赖（即 $\beta \subseteq \alpha$）
             - $\alpha$ 是模式的一个超码
-            - $\beta - \alpha$ 中的每个属性 $A$ 都包含于 $R$ 的**某个**候选码中
+            - $\beta - \alpha$ 中的每个属性 $A$ 都包含于 $R$ 的**某个**候选码中（对 BCNF 的放宽，**允许存在主属性对候选码的传递依赖和部分依赖**）
         - （习题 8.16）使用传递依赖重新定义 3NF：
-            - 如果 $R$ 中不存在非主属性 $A$ 传递依赖于 $R$ 的一个码（候选码），则 $R$ 满足 3NF
+            - **如果 $R$ 中不存在非主属性 $A$ 传递依赖或部分依赖于 $R$ 的一个候选码，则 $R$ 满足 3NF**
 
     - **Boyce-Codd 范式（BCNF）**
-
-        - 具有函数依赖集 $F$ 的关系模式 $R$ 属于 BCNF 的条件是，对于 $F^+$ 中**所有**形如 $\alpha \rightarrow \beta$ 的函数依赖，以下至少有一项成立：
-            - $\alpha \rightarrow \beta$ 是平凡的函数依赖（即 $\beta \subseteq \alpha$）
-            - $\alpha$ 是模式的一个超码
-        - BCNF 要求所有非平凡函数依赖都形如 $\alpha \rightarrow \beta$，其中 $\alpha$ 是超码
-        - 任意**只有两个属性的关系模式都属于 BCNF**
-
-        - 关系模式 $R$ 不属于 BCNF 的条件是，$F^+$ 中至少存在一个非平凡的形如 $\alpha \rightarrow \beta$ 的函数依赖，其中 $\alpha$ 不是 $R$ 的超码
-        
-    - （8.6.2）**第四范式**（4NF）
     
-    - 定义：对 $D^+$ 中所有形如 $\alpha \rightarrow\rightarrow \beta$ 的多值依赖，以下至少一项成立：
-            - $\alpha \rightarrow\rightarrow \beta$ 是平凡的多值依赖
+        - 具有函数依赖集 $F$ 的关系模式 $R$ 属于 BCNF 的条件是，对于 $F^+$ 中所有形如 $\alpha \rightarrow \beta$ 的函数依赖，以下至少有一项成立：
+    
+          - $\alpha \rightarrow \beta$ 是平凡的函数依赖（即 $\beta \subseteq \alpha$）
+          - $\alpha$ 是模式的一个超码
+    
+        - BCNF 要求所有非平凡函数依赖都形如 $\alpha \rightarrow \beta$，其中 $\alpha$ 是超码
+    
+        - 任意**只有两个属性的关系模式都属于 BCNF**
+    
+        - 关系模式 $R$ 不属于 BCNF 的条件是，$F^+$ 中至少存在一个非平凡的形如 $\alpha \rightarrow \beta$ 的函数依赖，其中 $\alpha$ 不是 $R$ 的超码
+    
+        - <font color="blue">BCNF 排除了任何属性（包括主属性和非主属性）对候选码的**部分依赖和传递依赖**，也排除了主属性之间的**传递依赖**</font>
+    
+        - （8.5.1）**BCNF 分解**：分解非 BCNF 的关系 $R$ 的一般规则是用以下两个模式取代 $R$
+    
+          - $(\alpha \cup \beta)$
+          - $(R - (\beta - \alpha))$
+    
+          可能需要经过多次分解，**BCNF 分解是无损的，但通常不能保持依赖**（可能引入新的函数依赖关系）
+    
+    - （8.6.2）第四范式（4NF）
+    
+        - 定义：对 $D^+$ 中所有形如 $\alpha \rightarrow\rightarrow \beta$ 的多值依赖，以下至少一项成立：
+                - $\alpha \rightarrow\rightarrow \beta$ 是平凡的多值依赖
         - $\alpha$ 是一个超码
         - TBC
-    
-    - 各范式之间的关系：
-    
-    ![](https://s2.ax1x.com/2019/11/18/M6Hmo8.png)
     
 - （8.3.1）码和函数依赖
 
@@ -498,26 +638,23 @@ where not exists
     
 - **分解**
 
-    - （8.4.4）**无损分解**（lossless decomposition）：对于关系模式 $r(R)$，函数依赖集为 $F$。令 $R_1,R_2$ 为 $R$ 的分解。如果用 $r_1(R_1)$ 和 $r_2(r_2)$ 代替 $r(R)$ 没有信息损失，则这个分解是无损的。
+    - <font color="blue">有损分解</font>：无法通过自然连接重建原始关系元组的分解
+
+    - （8.4.4）**无损分解**（lossless decomposition）：可以通过自然连接重建原始关系元组的分解。
+
+        对于关系模式 $r(R)$，函数依赖集为 $F$。令 $R_1,R_2$ 为 $R$ 的分解。如果用 $r_1(R_1)$ 和 $r_2(R_2)$ 代替 $r(R)$ 没有信息损失，则这个分解是无损的。
 
         - 用关系代数说明无损分解：$\prod_{R_1}(r) \Join \prod_{R_2}(r) = r$
-
-        - 用函数依赖说明无损分解：以下两个函数依赖至少有一个属于 $F^+$
-
-            - $R_1 \cap R_2 \rightarrow R_1$
+    
+    - 用函数依赖说明无损分解：以下两个函数依赖至少有一个属于 $F^+$
+    
+        - $R_1 \cap R_2 \rightarrow R_1$
             -  $R_1 \cap R_2 \rightarrow R_2$
 
             换句话说，如果 $R_1 \cap R_2$ 是 $R_1$ 或者 $R_2$ 的超码，则这是一个无损分解。
-
+    
     - 保持依赖
-
     
-    - （8.5.1）**BCNF 分解**：分解非 BCNF 的关系 $R$ 的一般规则是用以下两个模式取代 $R$：
-    
-      - $(\alpha \cup \beta)$
-      - $(R - (\beta - \alpha))$
-    
-      可能需要经过多次分解，BCNF 分解是无损的，但不能保持依赖（可能引入新的函数依赖关系）
     
     - （8.5.2）**3NF 分解**：将 $F$ 的正则覆盖 $F_c$ 中的每个式子转换成一个子关系模式，如果并未包含 $R$ 中所有的属性，再引入一个候选码（习题 8.29）3NF 分解是无损、保持依赖的
 
@@ -563,6 +700,47 @@ where not exists
 
       - 如果这个块已经在缓冲区中，缓冲区管理器将这个块在主存储器中的地址传给请求者
       - 如果这个块不在缓冲区中，缓冲区管理器需要在缓冲区中为这个块分配空间（可能需要根据替换策略将其它块移出主存储器），再把这个块从磁盘读入缓冲区，并将这个块在主存储器中的地址传给请求者
+      
+    - 缓冲区替换策略
+    
+      - <font color="blue">最近最少使用策略（least recently used，LRU）</font>：根据过去使用块的模式进行将来访问模式的预测（在涉及对<font color="blue">对数据重复扫描的访问模式</font>时，LRU 是一个糟糕的策略）
+  
+  - 索引（看 PPT）
+  
+    - 概念
+  
+      - 索引机制用来加速对所需数据的访问
+      - <font color="blue">搜索码</font>：用于在文件中查找记录的<font color="blue">属性或属性集</font>
+      - 一个索引文件包含很多<font color="blue">索引项</font>（搜索码值 + 记录指针）
+      - 索引文件一般比原文件小很多
+  
+    - <font color="blue">顺序索引</font>：按顺序存储搜索码的值，并将每个搜索码与包含该搜索码的记录关联起来
+  
+      - <font color="blue">主索引（聚集索引）</font>：顺序文件中，索引的搜索码指定了文件中记录的顺序
+  
+      - <font color="blue">辅助索引（非聚集索引）</font>：搜索码指定的顺序与文件中记录的物理顺序不同的索引（**必须是稠密的**）
+  
+      - <font color="blue">稠密索引</font>：文件中的**每个**搜索码值有一个索引记录
+  
+      - <font color="blue">稀疏索引</font>：只为搜索码的**某些值**建立索引记录
+  
+        稠密索引和系数索引对比
+  
+        - 稀疏索引插入和删除时所需的空间及维护开销较小
+        - 系数索引定位一条记录的速度较慢
+  
+        折中方法：为每个块建立一个索引项（<font color="blue">块起始搜索码</font>）的稀疏索引
+  
+      - <font color="blue">多级索引</font>：将主索引以顺序文件的形式存放于磁盘
+  
+    - <font color="blue">散列索引</font>：使用散列函数将搜索码平均分布到若干散列桶中
+      - <font color="blue">桶</font>是能存储一条或多条记录的一个存储单元（磁盘块）
+      - 在散列文件组织中，通过使用散列函数直接从搜索码中获得包含该记录的桶
+      - 散列函数 $h$ 是一个从 $K$ 到 $B$ 的函数，$K$ 表示所有搜索码值的集合，$B$ 表示所有桶地址的集合
+      - 具有不同搜索码值的记录<font color="blue">可能映射到同一个桶</font>，因此整个桶要被顺序搜索来定位记录
+      - 一个理想的散列函数是<font color="blue">均匀、随机</font>的，即每个桶分配<font color="blue">相同数量</font>的搜索码值
+      - 最坏情况时散列函数把所有搜索码映射到同一桶中，此时<font color="blue">访问时间 $\propto$ 搜索码数量</font>
+      - 通常散列函数依据<font color="blue">搜索码字符的二进制码和</font>来计算
 
 
 
@@ -758,15 +936,9 @@ where not exists
 
 1. 块是 <u>存储分配</u> 和 <u>数据传输</u> 的基本单位
 2. 数据库系统的一个主要目标是 <u>减少磁盘和存储器之间传输的块数（减少磁盘访问）</u>
-3. 
+3. 非原子的值会造成<u>复杂存储</u>和<u>数据冗余</u>
+4. Armstrong 公理是<u>有效的</u>、<u>完备的</u>
 
 
-
-### 设计部分
-
-- 什么是好的设计？
-    - 每个关系模式都是好的模式：无数据冗余（符合一定范式）
-    - 分解是无损连接（lossless connection）分解
-    - 最好的是，分解是保持依赖的（p189-190）
 
 <font color="blue"></font>
