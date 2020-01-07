@@ -62,14 +62,30 @@ category: 学习
 
 - （4.1.3）连接类型和连接条件
 
-- （4.2.1）试图关系在概念上包含查询结果中的元组，但不进行预计算和存储，**数据库系统存储与视图关系相关联的查询表达式**。当视图关系被访问时，其中的元组是通过计算查询结果而被创建出来的。
+### 视图
 
-- （4.2.4）SQL 试图可更新的条件
+- 不是逻辑模式的一部分，但作为“虚关系”对用户可见的关系称为<font color="blue">视图</font>，视图提供了向用户隐藏特定数据的机制
+- <font color="blue">视图定义会导致一个**表达式**被存储</font>
+- 视图上可以进行的操作
+  - 用视图**定义其他视图**
+  - 视图更新，视图更新是有条件的：
+    - `from`子句中只有一个数据库关系
+    - `select`子句中只包含关系的属性名，不包含任何表达式、聚集或`distinct`声明
+    - 任何没有出现在`select`子句中的属性可以取空值，这些属性上没有`not null`约束，也不构成主码的一部分
+    - 查询中不含有`group by`或`having`子句
 
-  - `from`子句中只有一个数据库关系
-  - `select`子句中只包含关系的属性名，不包含任何表达式、聚集或`distinct`声明
-  - 任何没有出现在`select`子句中的属性可以取空值，这些属性上没有`not null`约束，也不构成主码的一部分
-  - 查询中不含有`group by`或`having`子句
+- <font color="blue">物化视图</font>：定义视图的实际关系改变，视图也跟着修改
+
+### 完整性约束
+
+<font color="blue">完整性约束</font>防止对数据的意外破坏，它保证授权用户对数据库所做的修改<font color="blue">不会破坏数据的一致性</font>
+
+- `not null`
+- `unique`
+- `check` 子句
+  - `check(P)` 使得关系中的每个元组都必须满足谓词 P，P 可以是包括子查询在内的任意谓词，但实现开销较大
+- <font color="blue">参照完整性（子集依赖）</font>：保证一个关系中给定属性集上的取值在另一关系的特定属性集的取值中出现
+- **外码可以为空（默认满足约束），候选码可以为空**
 
 - （4.6.1）授权
 
@@ -498,64 +514,63 @@ where not exists
         - 设 $r(R)$ 是一个关系模式，$\alpha \subseteq R$，$\beta \subseteq R$，模式 $R$ 上的函数依赖 $\alpha \to \beta$ 成立的条件是：**对于任意关系实例 $r$ 中任意两个元组 $t_1$ 和 $t_2$，$t_1[\alpha]=t_2[\alpha] \Rightarrow t_1[\beta]=t_2[\beta]$**
         - 如果**每个 $\alpha$ 的特定值至多对应一个 $\beta$**，称作 $\alpha$ 函数确定 $\beta$，或者 $\beta$ 函数依赖于 $\alpha$，记作 $\alpha \rightarrow \beta$ 
         - <font color="blue">部分函数依赖</font>：存在 $\alpha$ 的真子集 $\gamma$ 使得 $\gamma \to \beta$，则 $\alpha \rightarrow \beta$ 是部分依赖
+        - 传递函数依赖：令 $\alpha$ 和 $\beta$ 为属性集，使得 $\alpha \rightarrow \beta$ 成立而 $\beta \rightarrow \alpha$ 不成立。令 $A$ 为一个属性，它既不属于 $\alpha$ 也不属于 $\beta$，并且 $\beta \rightarrow A$ 成立。则 $A$ **传递依赖**（transitive dependency）于 $\alpha$
         - 函数依赖是“码"的概化（generalization），能表达超码不能表达的约束
-        - （8.3.1）如果一个函数依赖在所有关系上都满足，那么它是**<font color="blue">平凡的</font>**（trivial），**如果 $\beta \subset \alpha$，那么形如 $\alpha \rightarrow \beta$ 的函数依赖是平凡的**
-
-    - 码
-
+    - （8.3.1）如果一个函数依赖在所有关系上都满足，那么它是**<font color="blue">平凡的</font>**（trivial），**如果 $\beta \subset \alpha$，那么形如 $\alpha \rightarrow \beta$ 的函数依赖是平凡的**
+    
+- 码
+    
         - <font color="blue">超码</font>：若一个或多个属性的集合 $\{A_1,A_2,\dots,A_n\}$ 函数确定该关系中其他全部属性，则称该属性为该关系的超码，即记 $K=\{A_1,A_2,\dots,A_n\}$，$K\to R$，则 $K$ 是关系模式 $R$ 的超码
-        -  候选码、外码
-
-    - **闭包**（closure）
-
-        - （8.3.1）**<font color="blue">函数依赖集的闭包</font>**：给定函数依赖集 $F$，我们使用 $F^+$ 表示**由 $F$ 推导出的所有函数依赖的集合**，称为 $F$ 的闭包
-
-            - $F^+$ 是 $F$ 的超集
-
-              🌰 $F = \{ A \rightarrow B, B \rightarrow C \}$, 我们可以推导出 $A \rightarrow C$
-
-        - （8.4.2）**<font color="blue">属性集的闭包</font>**：函数依赖集 $F$ 下**被 $\alpha$ 函数确定的所有属性的集合**称为 $F$ 下 $\alpha$ 的闭包，记作 $\alpha^+$（$\alpha^+_F$，在下标指明函数依赖集）
-
-            用途：
-
+    -  候选码、外码
+    
+- **闭包**（closure）
+    
+    - （8.3.1）**<font color="blue">函数依赖集的闭包</font>**：给定函数依赖集 $F$，我们使用 $F^+$ 表示**由 $F$ 推导出的所有函数依赖的集合**，称为 $F$ 的闭包
+    
+        - $F^+$ 是 $F$ 的超集
+    
+          🌰 $F = \{ A \rightarrow B, B \rightarrow C \}$, 我们可以推导出 $A \rightarrow C$
+    
+    - （8.4.2）**<font color="blue">属性集的闭包</font>**：函数依赖集 $F$ 下**被 $\alpha$ 函数确定的所有属性的集合**称为 $F$ 下 $\alpha$ 的闭包，记作 $\alpha^+$（$\alpha^+_F$，在下标指明函数依赖集）
+    
+        用途：
+    
             - <font color="blue">判断超码</font>：若 $\alpha^+ = R$，则 $\alpha$ 是 $R$ 的一个超码
             - <font color="blue">验证函数依赖</font>：若 $\beta \subseteq \alpha^+$，则 $\alpha \rightarrow \beta$
-            - <font color="blue">计算 $F$ 的闭包</font>：计算 $F^+$：对 $\forall \gamma \subseteq R$，找出 $\gamma^+$；对 $\forall S \subseteq \gamma^+$，函数依赖 $\gamma \rightarrow S$ 属于 $F^+$
-
-        - （8.6.1）**函数依赖和多值依赖集的闭包**：函数依赖和多值依赖 $D$ 的闭包 $D^+$ 是由 $D$ 逻辑蕴含的所有函数依赖和多值依赖的集合
-
-    - （8.4.3）**正则覆盖**（canonical cover）：
-
+        - <font color="blue">计算 $F$ 的闭包</font>：计算 $F^+$：对 $\forall \gamma \subseteq R$，找出 $\gamma^+$；对 $\forall S \subseteq \gamma^+$，函数依赖 $\gamma \rightarrow S$ 属于 $F^+$
+    
+    - （8.6.1）**函数依赖和多值依赖集的闭包**：函数依赖和多值依赖 $D$ 的闭包 $D^+$ 是由 $D$ 逻辑蕴含的所有函数依赖和多值依赖的集合
+    
+- （8.4.3）**正则覆盖**（canonical cover）：
+    
         - $F$ 的正则覆盖 $F_c$ 是一个函数依赖集，并且：
             - $F$ 逻辑蕴含 $F_c$ 中的所有依赖
             - $F_c$ 逻辑蕴含 $F$ 中的所有函数依赖
             - $F_c$ 中任何函数依赖都**不含无关属性**
             - $F_c$ 中函数依赖的**左半部都是不同的**
         - <font color="blue">正则覆盖去除了冗余依赖</font>
-        - <font color="blue">正则覆盖 $F_c$ 和 $F$ 具有相同的函数依赖集闭包</font>
-
-    - ⭐⭐**<font color="blue">Armstrong 公理</font>**（Armstrong's axiom）：用于寻找逻辑蕴含（logically imply）的函数依赖，反复应用 Armstrong 公理可以求函数依赖集 $F$ 的闭包 $F^+$
-
+    - <font color="blue">正则覆盖 $F_c$ 和 $F$ 具有相同的函数依赖集闭包</font>
+    
+- ⭐⭐**<font color="blue">Armstrong 公理</font>**（Armstrong's axiom）：用于寻找逻辑蕴含（logically imply）的函数依赖，反复应用 Armstrong 公理可以求函数依赖集 $F$ 的闭包 $F^+$
+    
         Armstrong 公理是<font color="blue">有效的、完备的</font>
         
         - 自反律：若 $\beta \subseteq \alpha$，则 $\alpha \rightarrow \beta$
     - 增补律：若 $\alpha \rightarrow \beta$，则 $\gamma \alpha \rightarrow \gamma \beta$
-        - 传递律：若 $\alpha \rightarrow \beta$ 且 $\beta \rightarrow \gamma$，则 $\alpha \rightarrow \gamma$
-
+    - 传递律：若 $\alpha \rightarrow \beta$ 且 $\beta \rightarrow \gamma$，则 $\alpha \rightarrow \gamma$
+    
         其他一些规则：
         
         - 合并律：若 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$，则 $\alpha \rightarrow \beta \gamma$
         - 分解律：若 $\alpha \rightarrow \beta \gamma$，则 $\alpha \rightarrow \beta$ 且 $\alpha \rightarrow \gamma$
         - 伪传递率：若 $\alpha \rightarrow \beta$ 且 $\gamma \beta \rightarrow \delta$，则 $\gamma \alpha \rightarrow \delta$
         
-        - 传递函数依赖：令 $\alpha$ 和 $\beta$ 为属性集，使得 $\alpha \rightarrow \beta$ 成立而 $\beta \rightarrow \alpha$ 不成立。令 $A$ 为一个属性，它既不属于 $\alpha$ 也不属于 $\beta$，并且 $\beta \rightarrow A$ 成立。则 $A$ **传递依赖**（transitive dependency）于 $\alpha$
-        
     - （8.6.1）**多值依赖**（multivalued dependency），也称为元组产生依赖（tuple generating dependency）
-
-        - 记作 $\alpha \rightarrow\rightarrow \beta$
+    
+    - 记作 $\alpha \rightarrow\rightarrow \beta$
         - 多值依赖是说 $\alpha$ 和 $\beta$ 之间的联系独立于 $\alpha$ 和 $R-\beta$ 之间的联系
-
-        - 性质：
+    
+    - 性质：
             - 若 $\alpha \rightarrow \beta$，则 $\alpha \rightarrow\rightarrow \beta$，即每一个函数依赖都是一个多值依赖
             - 若 $\alpha \rightarrow \beta$，则 $\alpha \rightarrow\rightarrow R - \alpha - \beta$
         
@@ -573,9 +588,9 @@ where not exists
 $$
         1NF \supset 2NF \supset 3NF \supset BCNF \supset 4NF \supset 5NF
 $$
-        
+
 - （8.2）**第一范式**（1NF，First Normal Format）：所有属性的域都是<font color="blue">原子</font>的关系模式
-    
+  
         - 非原子的值会造成<font color="blue">复杂存储</font>和<font color="blue">数据冗余</font>
     
     - （习题 8.17）**<font color="blue">第二范式</font>**（2NF）：若关系模式 $R \in 1NF$，且在 $F^+$ 中<font color="blue">每一个非主属性**完全**函数依赖于候选码</font>，则 $R \in 2NF$  （**消除了 1NF 中的部分函数依赖**）
@@ -605,13 +620,6 @@ $$
     
         - <font color="blue">BCNF 排除了任何属性（包括主属性和非主属性）对候选码的**部分依赖和传递依赖**，也排除了主属性之间的**传递依赖**</font>
     
-        - （8.5.1）**BCNF 分解**：分解非 BCNF 的关系 $R$ 的一般规则是用以下两个模式取代 $R$
-    
-          - $(\alpha \cup \beta)$
-          - $(R - (\beta - \alpha))$
-    
-          可能需要经过多次分解，**BCNF 分解是无损的，但通常不能保持依赖**（可能引入新的函数依赖关系）
-    
     - （8.6.2）第四范式（4NF）
     
         - 定义：对 $D^+$ 中所有形如 $\alpha \rightarrow\rightarrow \beta$ 的多值依赖，以下至少一项成立：
@@ -638,9 +646,9 @@ $$
     
 - **分解**
 
-    - <font color="blue">有损分解</font>：无法通过自然连接重建原始关系元组的分解
+    - <font color="blue">有损分解</font>：无法通过**自然连接**重建原始关系元组的分解
 
-    - （8.4.4）**无损分解**（lossless decomposition）：可以通过自然连接重建原始关系元组的分解。
+    - （8.4.4）**无损分解**（lossless decomposition）：可以通过**自然连接**重建原始关系元组的分解。
 
         对于关系模式 $r(R)$，函数依赖集为 $F$。令 $R_1,R_2$ 为 $R$ 的分解。如果用 $r_1(R_1)$ 和 $r_2(R_2)$ 代替 $r(R)$ 没有信息损失，则这个分解是无损的。
 
@@ -653,10 +661,15 @@ $$
 
             换句话说，如果 $R_1 \cap R_2$ 是 $R_1$ 或者 $R_2$ 的超码，则这是一个无损分解。
     
-    - 保持依赖
+    - （8.5.1）**BCNF 分解**：分解非 BCNF 的关系 $R$ 的一般规则是用以下两个模式取代 $R$
+    
+        - $(\alpha \cup \beta)$
+        - $(R - (\beta - \alpha))$
+    
+        可能需要经过多次分解，**BCNF 分解是无损的，但通常不能保持依赖**（可能引入新的函数依赖关系）
     
     
-    - （8.5.2）**3NF 分解**：将 $F$ 的正则覆盖 $F_c$ 中的每个式子转换成一个子关系模式，如果并未包含 $R$ 中所有的属性，再引入一个候选码（习题 8.29）3NF 分解是无损、保持依赖的
+    - （8.5.2）**3NF 分解**：将 $F$ 的正则覆盖 $F_c$ 中的每个式子转换成一个子关系模式，如果并未包含 $R$ 中所有的属性，再引入一个候选码（习题 8.29）**3NF 分解是无损、保持依赖的**
 
 
 
@@ -934,10 +947,16 @@ $$
 
 ## 概念押题
 
-1. 块是 <u>存储分配</u> 和 <u>数据传输</u> 的基本单位
-2. 数据库系统的一个主要目标是 <u>减少磁盘和存储器之间传输的块数（减少磁盘访问）</u>
-3. 非原子的值会造成<u>复杂存储</u>和<u>数据冗余</u>
-4. Armstrong 公理是<u>有效的</u>、<u>完备的</u>
+1. 什么是完整性约束？
+2. 事务管理主要处理两个主要问题：故障恢复、并发执行 
+3. 数据库的并发控制保证所有的调度是冲突可串行化、可恢复的
+4. 检查点的作用是什么？
+5. :star:5V 特性
+6. :star:事务的 ACID 特性是原子性、持久性、一致性、隔离性
+7. 块是 <u>存储分配</u> 和 <u>数据传输</u> 的基本单位
+8. 数据库系统的一个主要目标是 <u>减少磁盘和存储器之间传输的块数（减少磁盘访问）</u>
+9. 非原子的值会造成<u>复杂存储</u>和<u>数据冗余</u>
+10. Armstrong 公理是<u>有效的</u>、<u>完备的</u>
 
 
 
